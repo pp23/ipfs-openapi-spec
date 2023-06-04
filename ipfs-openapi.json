@@ -3,7 +3,7 @@
   "info": {
     "title": "IPFS RPC API",
     "version": "v0",
-    "description": "When a Kubo IPFS node is running as a daemon, it exposes an HTTP RPC API that allows you to control the node and run the same commands you can from the command line.\n\nIn many cases, using this RPC API is preferable to embedding IPFS directly in your program — it allows you to maintain peer connections that are longer lived than your app and you can keep a single IPFS node running instead of several if your app can be launched multiple times. In fact, the `ipfs` CLI commands use this RPC API when operating in online mode.",
+    "description": "When a Kubo IPFS node is running as a daemon, it exposes an HTTP RPC API that allows you to control the node and run the same commands you can from the command line.\\n\\nIn many cases, using this RPC API is preferable to embedding IPFS directly in your program — it allows you to maintain peer connections that are longer lived than your app and you can keep a single IPFS node running instead of several if your app can be launched multiple times. In fact, the `ipfs` CLI commands use this RPC API when operating in online mode.",
     "x-providerName": "IPFS",
     "x-logo": {
       "url": "https://raw.githubusercontent.com/ipfs/ipfs-docs/55fe8bc6a53ba3b9023951fb4b432efbbc81fba5/docs/.vuepress/public/images/ipfs-logo.svg"
@@ -175,7 +175,18 @@
         ],
         "requestBody": {
           "description": "Argument `path` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.\n\n\n\nThe `add` command not only allows adding files, but also uploading directories and complex hierarchies.\n\nThis happens as follows: Every part in the multipart request is a *directory* or a *file* to be added to IPFS.\n\nDirectory parts have a special content type `application/x-directory`. These parts do not carry any data. The part headers look as follows:\n\n```\nContent-Disposition: form-data; name=\"file\"; filename=\"folderName\"\nContent-Type: application/x-directory\n```\n\nFile parts carry the file payload after the following headers:\n\n```\nAbspath: /absolute/path/to/file.txt\nContent-Disposition: form-data; name=\"file\"; filename=\"folderName%2Ffile.txt\"\nContent-Type: application/octet-stream\n\n...contents...\n```\n\nThe above file includes its path in the \"folderName/file.txt\" hierarchy and IPFS will therefore be able to add it inside \"folderName\". The parts declaring the directories are optional when they have files inside and will be inferred from the filenames. In any case, a depth-first traversal of the directory tree is recommended to order the different parts making the request.\n\nThe `Abspath` header is included for filestore/urlstore features that are enabled with the `nocopy` option and it can be set to the location of the file in the filesystem (within the IPFS root), or to its full web URL.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -424,7 +435,18 @@
         ],
         "requestBody": {
           "description": "Argument `data` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -1059,7 +1081,7 @@
           {
             "name": "arg",
             "in": "query",
-            "description": "arg0: The key of the config entry (e.g. \"Addresses.API\").\n\narg1: The value to set the config entry to.",
+            "description": "arg0: The key of the config entry (e.g. \\\"Addresses.API\\\").\\n\\narg1: The value to set the config entry to.",
             "required": true,
             "explode": true,
             "schema": {
@@ -1171,7 +1193,18 @@
         "parameters": [],
         "requestBody": {
           "description": "Argument `file` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -1314,7 +1347,18 @@
         ],
         "requestBody": {
           "description": "Argument `path` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -1394,7 +1438,18 @@
         ],
         "requestBody": {
           "description": "Argument `object data` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "object_data": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -1714,7 +1769,7 @@
             "description": "Path to change.",
             "schema": {
               "type": "string",
-              "default": "'/'"
+              "default": "''/''"
             }
           },
           {
@@ -1754,7 +1809,7 @@
           {
             "name": "arg",
             "in": "query",
-            "description": "arg0: Source IPFS or MFS path to copy.\n\narg1: Destination within MFS.",
+            "description": "arg0: Source IPFS or MFS path to copy.\\n\\narg1: Destination within MFS.",
             "required": true,
             "explode": true,
             "schema": {
@@ -1794,7 +1849,7 @@
             "description": "Path to flush.",
             "schema": {
               "type": "string",
-              "default": "'/'"
+              "default": "''/''"
             }
           }
         ],
@@ -1928,7 +1983,7 @@
           {
             "name": "arg",
             "in": "query",
-            "description": "arg0: Source file to move.\n\narg1: Destination path for file to be moved to.",
+            "description": "arg0: Source file to move.\\n\\narg1: Destination path for file to be moved to.",
             "required": true,
             "explode": true,
             "schema": {
@@ -2051,7 +2106,7 @@
             "description": "Print statistics in given format. Allowed tokens: <hash> <size> <cumulsize> <type> <childs>. Conflicts with other format options.",
             "schema": {
               "type": "string",
-              "default": "<hash>\nSize: <size>\nCumulativeSize: <cumulsize>\nChildBlocks: <childs>\nType: <type>"
+              "default": "<hash>\\nSize: <size>\\nCumulativeSize: <cumulsize>\\nChildBlocks: <childs>\\nType: <type>"
             }
           },
           {
@@ -2187,7 +2242,18 @@
         ],
         "requestBody": {
           "description": "Argument `data` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -2582,7 +2648,18 @@
         ],
         "requestBody": {
           "description": "Argument `key` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -2655,7 +2732,7 @@
           {
             "name": "arg",
             "in": "query",
-            "description": "arg0: name of key to rename\n\narg1: new name of the key",
+            "description": "arg0: name of key to rename\\n\\narg1: new name of the key",
             "required": true,
             "explode": true,
             "schema": {
@@ -2806,7 +2883,7 @@
           {
             "name": "arg",
             "in": "query",
-            "description": "arg0: The subsystem logging identifier. Use 'all' for all subsystems.\n\narg1: The log level, with 'debug' the most verbose and 'fatal' the least verbose.\nOne of: debug, info, warn, error, dpanic, panic, fatal.",
+            "description": "arg0: The subsystem logging identifier. Use 'all' for all subsystems.\\n\\narg1: The log level, with 'debug' the most verbose and 'fatal' the least verbose.\\nOne of: debug, info, warn, error, dpanic, panic, fatal.",
             "required": true,
             "explode": true,
             "schema": {
@@ -2945,7 +3022,18 @@
         "parameters": [],
         "requestBody": {
           "description": "Argument `encoded_file` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "encoded_file": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -2974,7 +3062,18 @@
         ],
         "requestBody": {
           "description": "Argument `file` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -3045,7 +3144,18 @@
         ],
         "requestBody": {
           "description": "Argument `encoded_file` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "encoded_file": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -3083,7 +3193,7 @@
           {
             "name": "lifetime",
             "in": "query",
-            "description": "Time duration that the record will be valid for.\nThis accepts durations such as \"300s\", \"1.5h\" or \"2h45m\". Valid time units are\n\"ns\", \"us\" (or \"µs\"), \"ms\", \"s\", \"m\", \"h\".",
+            "description": "Time duration that the record will be valid for.\\nThis accepts durations such as \\\"300s\\\", \\\"1.5h\\\" or \\\"2h45m\\\". Valid time units are\\n\\\"ns\\\", \\\"us\\\" (or \\\"µs\\\"), \\\"ms\\\", \\\"s\\\", \\\"m\\\", \\\"h\\\".",
             "schema": {
               "type": "string",
               "default": "24h"
@@ -3192,7 +3302,7 @@
           {
             "name": "dht-timeout",
             "in": "query",
-            "description": "Max time to collect values during DHT resolution eg \"30s\". Pass 0 for no timeout.",
+            "description": "Max time to collect values during DHT resolution eg \\\"30s\\\". Pass 0 for no timeout.",
             "schema": {
               "type": "string"
             }
@@ -3291,7 +3401,7 @@
           {
             "name": "type",
             "in": "query",
-            "description": "The type of pinned keys to list. Can be \"direct\", \"indirect\", \"recursive\", or \"all\".",
+            "description": "The type of pinned keys to list. Can be \\\"direct\\\", \\\"indirect\\\", \\\"recursive\\\", or \\\"all\\\".",
             "schema": {
               "type": "string",
               "default": "all"
@@ -3534,7 +3644,7 @@
           {
             "name": "arg",
             "in": "query",
-            "description": "arg0: Service name.\n\narg1: Service endpoint.\n\narg2: Service key.",
+            "description": "arg0: Service name.\\n\\narg1: Service endpoint.\\n\\narg2: Service key.",
             "required": true,
             "explode": true,
             "schema": {
@@ -3677,7 +3787,7 @@
           {
             "name": "arg",
             "in": "query",
-            "description": "arg0: Path to old object.\n\narg1: Path to a new object to be pinned.",
+            "description": "arg0: Path to old object.\\n\\narg1: Path to a new object to be pinned.",
             "required": true,
             "explode": true,
             "schema": {
@@ -4112,7 +4222,7 @@
           {
             "name": "dht-timeout",
             "in": "query",
-            "description": "Max time to collect values during DHT resolution eg \"30s\". Pass 0 for no timeout.",
+            "description": "Max time to collect values during DHT resolution eg \\\"30s\\\". Pass 0 for no timeout.",
             "schema": {
               "type": "string"
             }
@@ -4377,7 +4487,18 @@
         ],
         "requestBody": {
           "description": "Argument `value-file` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value-file": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -4507,7 +4628,7 @@
           {
             "name": "interval",
             "in": "query",
-            "description": "Time interval to wait between updating output, if 'poll' is true.This accepts durations such as \"300s\", \"1.5h\" or \"2h45m\". Valid time units are:\n\"ns\", \"us\" (or \"µs\"), \"ms\", \"s\", \"m\", \"h\".",
+            "description": "Time interval to wait between updating output, if 'poll' is true.This accepts durations such as \\\"300s\\\", \\\"1.5h\\\" or \\\"2h45m\\\". Valid time units are:\\n\\\"ns\\\", \\\"us\\\" (or \\\"µs\\\"), \\\"ms\\\", \\\"s\\\", \\\"m\\\", \\\"h\\\".",
             "schema": {
               "type": "string",
               "default": "1s"
@@ -5376,7 +5497,7 @@
           {
             "name": "arg",
             "in": "query",
-            "description": "arg0: Protocol name.\n\narg1: Listening endpoint.\n\narg2: Target endpoint.",
+            "description": "arg0: Protocol name.\\n\\narg1: Listening endpoint.\\n\\narg2: Target endpoint.",
             "required": true,
             "explode": true,
             "schema": {
@@ -5414,7 +5535,7 @@
           {
             "name": "arg",
             "in": "query",
-            "description": "arg0: Protocol name.\n\narg1: Target endpoint.",
+            "description": "arg0: Protocol name.\\n\\narg1: Target endpoint.",
             "required": true,
             "explode": true,
             "schema": {
@@ -5638,7 +5759,18 @@
         ],
         "requestBody": {
           "description": "Argument `data` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -5706,7 +5838,18 @@
         ],
         "requestBody": {
           "description": "Argument `limit.json` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit.json": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -5991,7 +6134,18 @@
         ],
         "requestBody": {
           "description": "Argument `value-file` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value-file": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -6147,7 +6301,7 @@
           {
             "name": "arg",
             "in": "query",
-            "description": "arg0: Object to diff against.\n\narg1: Object to diff.",
+            "description": "arg0: Object to diff against.\\n\\narg1: Object to diff.",
             "required": true,
             "explode": true,
             "schema": {
@@ -6212,7 +6366,7 @@
           {
             "name": "data-encoding",
             "in": "query",
-            "description": "Encoding type of the data field, either \"text\" or \"base64\".",
+            "description": "Encoding type of the data field, either \\\"text\\\" or \\\"base64\\\".",
             "schema": {
               "type": "string",
               "default": "text"
@@ -6339,7 +6493,7 @@
           {
             "name": "arg",
             "in": "query",
-            "description": "arg0: The hash of the node to modify.\n\narg1: Name of link to create.\n\narg2: IPFS object to add link to.",
+            "description": "arg0: The hash of the node to modify.\\n\\narg1: Name of link to create.\\n\\narg2: IPFS object to add link to.",
             "required": true,
             "explode": true,
             "schema": {
@@ -6400,7 +6554,18 @@
         ],
         "requestBody": {
           "description": "Argument `data` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -6435,7 +6600,7 @@
           {
             "name": "arg",
             "in": "query",
-            "description": "arg0: The hash of the node to modify.\n\narg1: Name of the link to remove.",
+            "description": "arg0: The hash of the node to modify.\\n\\narg1: Name of the link to remove.",
             "required": true,
             "explode": true,
             "schema": {
@@ -6488,7 +6653,18 @@
         ],
         "requestBody": {
           "description": "Argument `data` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -6523,7 +6699,7 @@
           {
             "name": "inputenc",
             "in": "query",
-            "description": "Encoding type of input data. One of: {\"protobuf\", \"json\"}.",
+            "description": "Encoding type of input data. One of: {\\\"protobuf\\\", \\\"json\\\"}.",
             "schema": {
               "type": "string",
               "default": "json"
@@ -6532,7 +6708,7 @@
           {
             "name": "datafieldenc",
             "in": "query",
-            "description": "Encoding type of the data field, either \"text\" or \"base64\".",
+            "description": "Encoding type of the data field, either \\\"text\\\" or \\\"base64\\\".",
             "schema": {
               "type": "string",
               "default": "text"
@@ -6557,7 +6733,18 @@
         ],
         "requestBody": {
           "description": "Argument `data` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -6660,7 +6847,18 @@
         "parameters": [],
         "requestBody": {
           "description": "Argument `file` is of file type. This endpoint expects one or several files (depending on the command) in the body of the request as 'multipart/form-data'.",
-          "content": {}
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "file"
+                  }
+                }
+              }
+            }
+          }
         },
         "responses": {
           "200": {
